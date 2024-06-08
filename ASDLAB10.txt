@@ -1,0 +1,200 @@
+//zad 1
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+struct elem {
+    int key;
+    elem* left;
+    elem* right;
+};
+
+void add1(int n, elem* &t)
+{
+    if (t == NULL)
+    {
+        t = new elem;
+        t->key = n;
+        t->left = t->right = NULL;
+    }
+    else
+    {
+        if (t->key < n)
+            add1(n, t->right);
+        else
+            add1(n, t->left);
+    }
+}
+void printTree(elem* t)
+{
+    if (t != NULL)
+    {
+        printTree(t->left);
+        cout << t->key << " ";
+        printTree(t->right);
+    }
+}
+
+int main()
+{
+    elem* root = NULL;
+    
+    add1(17, root);
+    add1(11, root);
+    add1(23, root);
+    add1(7, root);
+
+
+    cout << "Tree: ";
+    printTree(root);
+    cout << endl;
+
+    add1(17, root);
+
+    cout << "The tree after trying to add 17: ";
+    printTree(root);
+    cout << endl;
+
+    return 0;
+}
+Когато изпълним програмата, ще добавим елементите 17, 11, 23 и 7 към дървото в съответния ред.
+При опит за добавяне на вече съществуващ елемент 17, функцията за добавяне ще продължи да търси място
+за новия елемент в дървото, като ще сравни ключа на 17 с ключовете на вече съществуващите елементи. 
+Тъй като 17 вече съществува в дървото, той няма да бъде добавен отново, а програмата ще завърши без проблеми.
+
+//zad2
+
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+
+struct elem {
+    int key;
+    elem* left;
+    elem* right;
+};
+void add1(int n, elem* &t)
+{
+    if (t == NULL)
+    {
+        t = new elem;
+        t->key = n;
+        t->left = t->right = NULL;
+    }
+    else
+    {
+        if (t->key < n)
+            add1(n, t->right);
+        else
+            add1(n, t->left);
+    }
+}
+
+void prefixTraversal(elem* t)
+{
+    if (t != NULL)
+    {
+        cout << t->key << " ";
+        prefixTraversal(t->left);
+        prefixTraversal(t->right);
+    }
+}
+
+void infixTraversal(elem* t)
+{
+    if (t != NULL)
+    {
+        infixTraversal(t->left);
+        cout << t->key << " ";
+        infixTraversal(t->right);
+    }
+}
+
+void postfixTraversal(elem* t)
+{
+    if (t != NULL)
+    {
+        postfixTraversal(t->left);
+        postfixTraversal(t->right);
+        cout << t->key << " ";
+    }
+}
+
+int main()
+{
+    elem* root = NULL;
+    
+    add1(17, root);
+    add1(11, root);
+    add1(23, root);
+    add1(7, root);
+
+    cout << "Префиксно обхождане: ";
+    prefixTraversal(root);
+    cout << endl;
+
+    cout << "Инфиксно обхождане: ";
+    infixTraversal(root);
+    cout << endl;
+
+    cout << "Постфиксно обхождане: ";
+    postfixTraversal(root);
+    cout << endl;
+
+    return 0;
+}
+
+//zad 3 
+
+void removeElement(int n, elem* &t) {
+    if (t == NULL) {
+        return;
+    }
+
+    if (n < t->key) {
+        removeElement(n, t->left); 
+    } else if (n > t->key) {
+        removeElement(n, t->right); 
+    } else {
+
+        if (t->left == NULL && t->right == NULL) {
+
+            delete t;
+            t = NULL;
+        } else if (t->left == NULL) {
+
+            elem* temp = t;
+            t = t->right;
+            delete temp;
+        } else if (t->right == NULL) {
+            elem* temp = t;
+            t = t->left;
+            delete temp;
+        } else {
+      
+            elem* minRight = t->right;
+            while (minRight->left != NULL) {
+                minRight = minRight->left;
+            }
+          
+            t->key = minRight->key;
+        
+            removeElement(minRight->key, t->right);
+        }
+    }
+}
+
+int main() {
+   
+    removeElement(17, root);
+    removeElement(17, root);
+
+    cout << "Дърво след изключване на елемента 17: ";
+    infixTraversal(root);
+    cout << endl;
+
+    removeElement(99, root);
+
+    return 0;
+}
+//Функция removeElement изключва даден елемент от дървото, като запазва структурата на дървото.
+Ако опитаме да изключим елемент, който не е наличен в дървото, функцията просто няма да направи нищо.
